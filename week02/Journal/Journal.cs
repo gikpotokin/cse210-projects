@@ -2,22 +2,22 @@ using System.Text.Json;
 
 public class Journal
 {
-    private List<Entry> entries = new List<Entry>();
-
+    private List<Entry> _entries = new();
     public void AddEntry(Entry entry)
     {
-        entries.Add(entry);
+        
+        _entries.Add(entry);
     }
 
     public void Display()
     {
-        if (entries.Count == 0)
+        if (_entries.Count == 0)
         {
             Console.WriteLine("No journal entries.");
             return;
         }
 
-        foreach (Entry entry in entries)
+        foreach (Entry entry in _entries)
         {
             entry.Display();
         }
@@ -27,7 +27,7 @@ public class Journal
     {
         try
         {
-            string json = JsonSerializer.Serialize(entries,
+            string json = JsonSerializer.Serialize(_entries,
                 new JsonSerializerOptions
                 {
                     WriteIndented = true
@@ -55,7 +55,7 @@ public class Journal
 
             string json = File.ReadAllText(filename);
 
-            entries = JsonSerializer.Deserialize<List<Entry>>(json);
+            _entries = JsonSerializer.Deserialize<List<Entry>>(json);
 
             Console.WriteLine("Journal loaded.");
         }
@@ -69,7 +69,7 @@ public class Journal
     {
         bool found = false;
 
-        foreach (Entry entry in entries)
+        foreach (Entry entry in _entries)
         {
             if ((entry.Response != null &&
                  entry.Response.Contains(keyword, StringComparison.OrdinalIgnoreCase))

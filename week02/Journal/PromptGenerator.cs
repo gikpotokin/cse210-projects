@@ -1,6 +1,6 @@
 public class PromptGenerator
 {
-    private List<string> prompts = new List<string>()
+    private List<string> _prompts = new List<string>
     {
         "Who was the most interesting person I met today?",
         "What made me smile today?",
@@ -14,10 +14,10 @@ public class PromptGenerator
         "If I could repeat one moment today, what would it be?"
     };
 
-    private Random random = new Random();
+    private Random _random = new Random();
 
     public string GetRandomPrompt()
     {
-        return prompts[random.Next(prompts.Count)];
+        return _prompts[_random.Next(_prompts.Count)];
     }
 }

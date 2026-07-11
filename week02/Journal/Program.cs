@@ -1,12 +1,10 @@
 using System;
 
-
 class Program
 {
     static void Main(string[] args)
     {
         Console.WriteLine("Hello World! This is the Journal Project.");
-
 
         // INSTRUCTIONS/NOTES:
         //
@@ -24,8 +22,24 @@ class Program
         // • Save entries to a file.
         // • Load entries from a file.
         //
-        // Author: Godswill Moses Ikpotokin (https://www.ikpotokin.ng)
-        // CEO & Software Developer, Applinet Technology (https://www.applinet.com.ng)
+        // EXCEEDING REQUIREMENTS
+        //
+        // This project exceeds the core requirements by:
+        //
+        // 1. Saving and loading journal entries using JSON serialization
+        //    instead of a plain text file.
+        //
+        // 2. Recording both the current date and time for every entry.
+        //
+        // 3. Allowing users to record their mood with each journal entry.
+        //
+        // 4. Providing a keyword search feature that searches prompts,
+        //    responses, and moods.
+        //
+        // 5. Using exception handling to gracefully handle file errors.
+        //
+        // Author: Godswill Moses Ikpotokin
+        // CEO & Software Developer, Applinet Technology
         // Student, BYU-Pathway Worldwide
 
         Journal journal = new Journal();
@@ -43,53 +57,142 @@ class Program
             Console.WriteLine("6. Exit");
             Console.Write("Select an option: ");
 
-            string choice = Console.ReadLine();
+            string choice = Console.ReadLine()?.Trim() ?? "";
 
             switch (choice)
             {
                 case "1":
+                {
                     string prompt = prompts.GetRandomPrompt();
 
                     Console.WriteLine();
                     Console.WriteLine(prompt);
-                    Console.Write("> ");
+                    Console.WriteLine("(Type 'cancel' at any time to return to the main menu.)");
 
-                    string response = Console.ReadLine();
+                    string response = "";
+                    bool cancelled = false;
 
-                    Console.Write("Mood today: ");
-                    string mood = Console.ReadLine();
+                    while (true)
+                    {
+                        Console.Write("> ");
+                        response = Console.ReadLine()?.Trim() ?? "";
+
+                        if (response.Equals("cancel", StringComparison.OrdinalIgnoreCase))
+                        {
+                            cancelled = true;
+                            Console.WriteLine("Journal entry cancelled.");
+                            break;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(response))
+                        {
+                            break;
+                        }
+
+                        Console.WriteLine("Response cannot be empty. Please try again.");
+                    }
+
+                    if (cancelled)
+                    {
+                        break;
+                    }
+
+                    string mood = "";
+
+                    // Get mood
+                    while (true)
+                    {
+                        Console.Write("Mood today: ");
+                        mood = Console.ReadLine()?.Trim() ?? "";
+
+                        if (mood.Equals("cancel", StringComparison.OrdinalIgnoreCase))
+                        {
+                            cancelled = true;
+                            Console.WriteLine("Journal entry cancelled.");
+                            break;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(mood))
+                        {
+                            break;
+                        }
+
+                        Console.WriteLine("Mood cannot be empty. Please try again.");
+                    }
+
+                    if (cancelled)
+                    {
+                        break;
+                    }
 
                     Entry entry = new Entry(prompt, response, mood);
-
                     journal.AddEntry(entry);
 
-                    Console.WriteLine("Journal entry saved.");
+                    Console.WriteLine("Journal entry saved successfully.");
                     break;
+                }
 
                 case "2":
                     journal.Display();
                     break;
 
                 case "3":
+                {
                     Console.Write("Filename: ");
-                    journal.Save(Console.ReadLine());
+                    string saveFile = Console.ReadLine()?.Trim() ?? "";
+
+                    if (string.IsNullOrWhiteSpace(saveFile))
+                    {
+                        Console.WriteLine("Filename cannot be empty.");
+                    }
+                    else
+                    {
+                        journal.Save(saveFile);
+                    }
+
                     break;
+                }
 
                 case "4":
+                {
                     Console.Write("Filename: ");
-                    journal.Load(Console.ReadLine());
+                    string loadFile = Console.ReadLine()?.Trim() ?? "";
+
+                    if (string.IsNullOrWhiteSpace(loadFile))
+                    {
+                        Console.WriteLine("Filename cannot be empty.");
+                    }
+                    else
+                    {
+                        journal.Load(loadFile);
+                    }
+
                     break;
+                }
 
                 case "5":
+                {
                     Console.Write("Enter keyword: ");
-                    journal.Search(Console.ReadLine());
+                    string keyword = Console.ReadLine()?.Trim() ?? "";
+
+                    if (string.IsNullOrWhiteSpace(keyword))
+                    {
+                        Console.WriteLine("Keyword cannot be empty.");
+                    }
+                    else
+                    {
+                        journal.Search(keyword);
+                    }
+
                     break;
+                }
 
                 case "6":
+                    Console.WriteLine("Goodbye!");
                     return;
 
                 default:
-                    Console.WriteLine("Invalid option.");
+                    Console.WriteLine("Invalid option. Please enter a number between 1 and 6.");
                     break;
             }
         }
